@@ -6,7 +6,7 @@
 # Blog: https://p3terx.com
 #=================================================
 
-name: Build OpenWrt
+name: Build OpenWrt_x86
 
 on: 
   release:
@@ -16,10 +16,10 @@ on:
       - master
     paths:
       - '.config'
-#  schedule:
-#    - cron: 0 8 * * 5
-#  watch:
-#    types: [started]
+  schedule:
+    - cron: 0 14 * * *
+  watch:
+    types: [started]
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
@@ -102,7 +102,7 @@ jobs:
       run: |
         rm -rf openwrt/artifact/
         mkdir -p openwrt/artifact/
-        find openwrt/bin/targets/ -name "*sysupgrade*bin*" | xargs -i mv -f {} openwrt/artifact/
+        find openwrt/bin/targets/ -name "*combined-squashfs*img*" | xargs -i mv -f {} openwrt/artifact/
         find openwrt/bin/targets/ -name "*config*seed*" | xargs -i mv -f {} openwrt/artifact/
         find openwrt/bin/targets/ -name "*sha256sums*" | xargs -i mv -f {} openwrt/artifact/
         cd openwrt/artifact/
@@ -113,5 +113,5 @@ jobs:
       uses: actions/upload-artifact@master
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: OpenWrt_firmware
+        name: OpenWrt_x86_firmware
         path: ${{ env.FIRMWARE }}
